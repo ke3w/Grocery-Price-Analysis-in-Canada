@@ -3,15 +3,16 @@ title: "Grocery Price Analysis in Canada"
 subtitle: "Using SQL Observational Data Analysis"
 author: 
   - Xinze Wu
-
 thanks: "Code and data are available at:https://github.com/ke3w/Grocery-Price-Analysis-in-Canada/tree/main "
 date: 2024/11/14
 date-format: long
 abstract: "This report explores grocery pricing data from various Canadian vendors, analyzing trends, sale frequencies, and price differences using SQL. The purpose is to identify pricing dynamics and potential implications for competition in the grocery sector."
-
 format: pdf
 number-sections: true
 bibliography: references.bib
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r}
@@ -23,42 +24,66 @@ library(tidyverse)
 library(palmerpenguins)
 ```
 
-
 # Introduction
 
-Project Hammer is a data-driven initiative aimed at enhancing competition and reducing collusion within the Canadian grocery sector. This report analyzes historical price data from major retailers to provide insights into pricing trends, sale frequencies, and patterns across vendors, leveraging the flexibility and capabilities of the R language [@citeR] and the tidyverse package [@tidyverse]. The project examines how price dynamics may impact competition, consumer behavior, and the grocery market landscape.
-
+Project Hammer is a data-driven initiative aimed at enhancing
+competition and reducing collusion within the Canadian grocery sector.
+This report analyzes historical price data from major retailers to
+provide insights into pricing trends, sale frequencies, and patterns
+across vendors, leveraging the flexibility and capabilities of the R
+language [@citeR] and the tidyverse package [@tidyverse]. The project
+examines how price dynamics may impact competition, consumer behavior,
+and the grocery market landscape.
 
 # Data {#sec-data}
 
 ## Overview
 
-This report’s diagrams are illustrated using ggplot2 [@ggplot2]. The dataset includes prices, timestamps, vendor information, and product-specific details from eight grocery vendors: Voila, T&T, Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods. Data was collected from https://jacobfilipp.com/hammer/.
+This report’s diagrams are illustrated using ggplot2 [@ggplot2]. The
+dataset includes prices, timestamps, vendor information, and
+product-specific details from eight grocery vendors: Voila, T&T,
+Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods. Data
+was collected from https://jacobfilipp.com/hammer/.
 
 Key columns in the dataset:
-- **nowtime**: Timestamp when data was collected
-- **vendor**: Grocery vendor name
-- **product_id**: Unique product identifier per vendor
-- **product_name**: Product name (includes brand and unit information)
-- **brand**: Product brand (if available)
-- **units**: Units in grams, kg, or number of items
-- **current_price**: Current price at the time of data collection
-- **old_price**: Previous price (indicating a sale if lower than `current_price`)
-- **price_per_unit**: Price per unit, if provided by the vendor
+
+\- **nowtime**: Timestamp when data was collected
+
+\- **vendor**: Grocery vendor name
+
+\- **product_id**: Unique product identifier per vendor
+
+\- **product_name**: Product name (includes brand and unit information)
+
+\- **brand**: Product brand (if available)
+
+\- **units**: Units in grams, kg, or number of items
+
+\- **current_price**: Current price at the time of data collection
+
+\- **old_price**: Previous price (indicating a sale if lower than
+`current_price`)
+
+\- **price_per_unit**: Price per unit, if provided by the vendor
 
 ## Measurement
 
-Our primary variables of interest include:
-- `current_price`: Used to compare pricing across vendors and over time.
-- `old_price`: Helps identify sale occurrences and calculate average discounts.
-- `vendor`: Allows comparison between different grocery chains.
+Our primary variables of interest include: - `current_price`: Used to
+compare pricing across vendors and over time. - `old_price`: Helps
+identify sale occurrences and calculate average discounts. - `vendor`:
+Allows comparison between different grocery chains.
 
-Data was managed and processed using the dplyr package [@dplyr] and stored in SQLite databases with the help of the RSQLite and DBI packages [@rsqlite; @dbi].
+Data was managed and processed using the dplyr package [@dplyr] and
+stored in SQLite databases with the help of the RSQLite and DBI packages
+[@rsqlite; @dbi].
 
 ## SQL-Based Findings
 
 ### Average Price by Vendor
-Using SQL, we calculated the average current_price of products across vendors to identify cost variations. Results are summarized below in a bar chart(@fig-avg-price).
+
+Using SQL, we calculated the average current_price of products across
+vendors to identify cost variations. Results are summarized below in a
+bar chart(@fig-avg-price).
 
 ```{r}
 #| label: fig-avg-price
@@ -80,9 +105,11 @@ ggplot(avg_price_data, aes(x = vendor, y = avg_price)) +
   )
 ```
 
-
 ### Sale Frequency and Discount Analysis
-We analyzed the frequency of discounts (current_price < old_price) and the average discount amount for each vendor using SQL. The results are shown in the table and visualized as follows(@fig-sale-frequency).
+
+We analyzed the frequency of discounts (current_price \< old_price) and
+the average discount amount for each vendor using SQL. The results are
+shown in the table and visualized as follows(@fig-sale-frequency).
 
 ```{r}
 #| label: fig-sale-frequency
@@ -115,7 +142,11 @@ ggplot(discount_data, aes(x = vendor, y = avg_discount)) +
 ```
 
 ### Price Trends Over Time
-SQL queries were used to track price changes for selected products over time to reveal trends. A sample product trend for “Becel Original Margarine” is shown in the line chart below(@fig-price-trend).
+
+SQL queries were used to track price changes for selected products over
+time to reveal trends. A sample product trend for “Becel Original
+Margarine” is shown in the line chart below(@fig-price-trend).
+
 ```{r}
 #| label: fig-price-trend
 #| fig-cap: "Price Trend for Becel Original Margarine Over Time"
@@ -137,27 +168,39 @@ ggplot(price_trend_data, aes(x = nowtime, y = current_price, color = vendor)) +
 # Discussion
 
 ## Correlation vs. Causation {#sec-correlation-vs-causation}
-The analysis identifies correlations in pricing patterns among vendors but does not imply causation. Vendors might have similar pricing trends due to external factors rather than direct influence on each other, aligning with principles discussed in @gebru2021datasheets.
+
+The analysis identifies correlations in pricing patterns among vendors
+but does not imply causation. Vendors might have similar pricing trends
+due to external factors rather than direct influence on each other,
+aligning with principles discussed in @gebru2021datasheets.
 
 ## Missing Data
-The dataset has occasional gaps due to limitations in data scraping, which may impact the consistency of pricing patterns across vendors. Handling these inconsistencies required tools like janitor to clean and organize the dataset [@janitor].
+
+The dataset has occasional gaps due to limitations in data scraping,
+which may impact the consistency of pricing patterns across vendors.
+Handling these inconsistencies required tools like janitor to clean and
+organize the dataset [@janitor].
 
 ## Sources of Bias
+
 Several biases may affect the dataset:
 
-	•	Data Collection Method: Data was gathered by scraping vendor websites, which may have inconsistencies in availability and timing.
+```         
+•   Data Collection Method: Data was gathered by scraping vendor websites, which may have inconsistencies in availability and timing.
 
-	•	Product Variability: Differences in product units or branding could affect price comparisons across vendors.
+•   Product Variability: Differences in product units or branding could affect price comparisons across vendors.
 
-	•	Discount Practices: Different vendors have varied approaches to sales and pricing, potentially skewing the data.
-
+•   Discount Practices: Different vendors have varied approaches to sales and pricing, potentially skewing the data.
+```
 
 # Conclusion
-This report highlights key pricing patterns among Canadian grocery vendors, contributing to a basic understanding of price dynamics in the grocery sector. Further studies could investigate consumer responses to discounts or explore seasonal price variations, leveraging databases like SQLite for efficient storage and analysis [@sql_data].
+
+This report highlights key pricing patterns among Canadian grocery
+vendors, contributing to a basic understanding of price dynamics in the
+grocery sector. Further studies could investigate consumer responses to
+discounts or explore seasonal price variations, leveraging databases
+like SQLite for efficient storage and analysis [@sql_data].
 
 \newpage
 
-
 # References
-
-
