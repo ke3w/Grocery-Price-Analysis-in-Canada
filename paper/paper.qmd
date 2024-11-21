@@ -68,10 +68,15 @@ Key columns in the dataset:
 
 ## Measurement
 
-Our primary variables of interest include: - `current_price`: Used to
-compare pricing across vendors and over time. - `old_price`: Helps
-identify sale occurrences and calculate average discounts. - `vendor`:
-Allows comparison between different grocery chains.
+Our primary variables of interest include:
+
+\- `current_price`: Used to compare pricing across vendors and over
+time.
+
+\- `old_price`: Helps identify sale occurrences and calculate average
+discounts.
+
+\- `vendor`: Allows comparison between different grocery chains.
 
 Data was managed and processed using the {dplyr} package [@dplyr] and
 stored in SQLite databases with the help of the {RSQLite} and {DBI}
@@ -109,7 +114,8 @@ ggplot(avg_price_data, aes(x = vendor, y = avg_price)) +
 
 We analyzed the frequency of discounts (current_price \< old_price) and
 the average discount amount for each vendor using SQL. The results are
-shown in the table and visualized as follows(@fig-sale-frequency-vendor, @fig-avg-discount-vendor).
+shown in the table and visualized as follows(@fig-sale-frequency-vendor,
+@fig-avg-discount-vendor).
 
 ```{r}
 #| label: fig-sale-frequency-vendor
@@ -131,6 +137,7 @@ ggplot(discount_data, aes(x = vendor, y = sale_count)) +
     axis.text.x = element_text(size = 7)
   )
 ```
+
 ```{r}
 #| label: fig-avg-discount-vendor
 #| fig-cap: "Average Discount by Vendor"
