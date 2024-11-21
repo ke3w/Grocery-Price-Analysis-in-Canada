@@ -1,4 +1,4 @@
-## SQL Observational Data Analysis Project
+## Grocery Price Analysis in Canada using SQL Observational Data Analysis
 
 ## Overview
 
