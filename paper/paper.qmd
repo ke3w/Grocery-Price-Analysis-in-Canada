@@ -31,7 +31,7 @@ competition and reducing collusion within the Canadian grocery sector.
 This report analyzes historical price data from major retailers to
 provide insights into pricing trends, sale frequencies, and patterns
 across vendors, leveraging the flexibility and capabilities of the R
-language [@citeR] and the tidyverse package [@tidyverse]. The project
+language [@citeR] and the {tidyverse} package [@tidyverse]. The project
 examines how price dynamics may impact competition, consumer behavior,
 and the grocery market landscape.
 
@@ -39,7 +39,7 @@ and the grocery market landscape.
 
 ## Overview
 
-This report’s diagrams are illustrated using ggplot2 [@ggplot2]. The
+This report’s diagrams are illustrated using {ggplot2} [@ggplot2]. The
 dataset includes prices, timestamps, vendor information, and
 product-specific details from eight grocery vendors: Voila, T&T,
 Loblaws, No Frills, Metro, Galleria, Walmart, and Save-On-Foods. Data
@@ -73,9 +73,9 @@ compare pricing across vendors and over time. - `old_price`: Helps
 identify sale occurrences and calculate average discounts. - `vendor`:
 Allows comparison between different grocery chains.
 
-Data was managed and processed using the dplyr package [@dplyr] and
-stored in SQLite databases with the help of the RSQLite and DBI packages
-[@rsqlite; @dbi].
+Data was managed and processed using the {dplyr} package [@dplyr] and
+stored in SQLite databases with the help of the {RSQLite} and {DBI}
+packages [@rsqlite; @dbi].
 
 ## SQL-Based Findings
 
@@ -109,11 +109,11 @@ ggplot(avg_price_data, aes(x = vendor, y = avg_price)) +
 
 We analyzed the frequency of discounts (current_price \< old_price) and
 the average discount amount for each vendor using SQL. The results are
-shown in the table and visualized as follows(@fig-sale-frequency).
+shown in the table and visualized as follows(@fig-sale-frequency-vendor, @fig-avg-discount-vendor).
 
 ```{r}
-#| label: fig-sale-frequency
-#| fig-cap: "Sale Frequency and Average Discount by Vendor"
+#| label: fig-sale-frequency-vendor
+#| fig-cap: "Sale Frequency by Vendor"
 #| echo: false
 
 # Placeholder code for R-generated bar plot for sale frequency
@@ -130,6 +130,11 @@ ggplot(discount_data, aes(x = vendor, y = sale_count)) +
   theme(
     axis.text.x = element_text(size = 7)
   )
+```
+```{r}
+#| label: fig-avg-discount-vendor
+#| fig-cap: "Average Discount by Vendor"
+#| echo: false
 
 # Second plot for average discount
 ggplot(discount_data, aes(x = vendor, y = avg_discount)) +
@@ -160,7 +165,7 @@ price_trend_data <- data.frame(
 )
 
 ggplot(price_trend_data, aes(x = nowtime, y = current_price, color = vendor)) +
-  geom_line(size = 1) +
+  geom_line(linewidth = 1) +
   theme_minimal() +
   labs(x = "Date", y = "Current Price ($)", title = "Price Trend for Becel Original Margarine")
 ```
@@ -178,20 +183,21 @@ aligning with principles discussed in @gebru2021datasheets.
 
 The dataset has occasional gaps due to limitations in data scraping,
 which may impact the consistency of pricing patterns across vendors.
-Handling these inconsistencies required tools like janitor to clean and
-organize the dataset [@janitor].
+Handling these inconsistencies required tools like {janitor} to clean
+and organize the dataset [@janitor].
 
 ## Sources of Bias
 
 Several biases may affect the dataset:
 
-```         
-•   Data Collection Method: Data was gathered by scraping vendor websites, which may have inconsistencies in availability and timing.
+• Data Collection Method: Data was gathered by scraping vendor websites,
+which may have inconsistencies in availability and timing.
 
-•   Product Variability: Differences in product units or branding could affect price comparisons across vendors.
+• Product Variability: Differences in product units or branding could
+affect price comparisons across vendors.
 
-•   Discount Practices: Different vendors have varied approaches to sales and pricing, potentially skewing the data.
-```
+• Discount Practices: Different vendors have varied approaches to sales
+and pricing, potentially skewing the data.
 
 # Conclusion
 
